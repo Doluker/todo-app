@@ -20,24 +20,26 @@ jobs:
         with:
           distribution: temurin
           java-version: '27'
+
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*','**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
       - name: Get project version
         id: get_version
         run: |
           VERSION=$(grep '^version=' gradle.properties | cut -d'=' -f2)
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Build (run tests and create fat JAR)
         run: ./gradlew --no-daemon clean build
-        env:
-          JAVA_HOME: ${{ env.JAVA_HOME_23_X64 || '' }}
+
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -46,9 +48,10 @@ jobs:
         with:
           tag_name: v${{ steps.get_version.outputs.VERSION }}
           release_name: Release v${{ steps.get_version.outputs.VERSION }}
-          body: Automated release for version ${{ steps.get_version.outputs.VERSION
+          body: Automated release for version ${{ steps.get_version.outputs.VERSION }}
           draft: false
           prerelease: false
+
       - name: Upload artifact to Release
         uses: actions/upload-release-asset@v1
         env:
