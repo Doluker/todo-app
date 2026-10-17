@@ -41,6 +41,10 @@ tasks.jar {
     enabled = false
 }
 
+tasks.named('distZip') { enabled = false }
+tasks.named('distTar') { enabled = false }
+tasks.named('startScripts') { enabled = false }
+
 tasks.build {
     dependsOn tasks.shadowJar
 }
